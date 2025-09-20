@@ -1,736 +1,136 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comandos - Zyvex Style</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-color: #1e1e2e;
-            --sidebar-color: #181825;
-            --accent-color: #89b4fa;
-            --text-color: #cdd6f4;
-            --secondary-text: #a6adc8;
-            --border-color: #313244;
-            --card-color: #181825;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
-        
-        /* Sidebar */
-        .sidebar {
-            width: 280px;
-            background-color: var(--sidebar-color);
-            padding: 20px;
-            overflow-y: auto;
-            border-right: 1px solid var(--border-color);
-            position: fixed;
-            height: 100%;
-            z-index: 100;
-            left: -280px;
-            transition: left 0.3s ease;
-        }
-        
-        .sidebar.open {
-            left: 0;
-        }
-        
-        .main-content {
-            padding: 20px;
-            width: 100%;
-            min-height: 100vh;
-            transition: margin-left 0.3s ease;
-        }
-        
-        .sidebar.open + .main-content {
-            margin-left: 280px;
-        }
-        
-        /* Logo */
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .logo-icon {
-            font-size: 40px;
-            color: var(--accent-color);
-            margin-bottom: 10px;
-        }
-        
-        .logo-text {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--accent-color);
-        }
-        
-        /* Categorias */
-        .category {
-            margin-bottom: 25px;
-        }
-        
-        .category-title {
-            color: var(--accent-color);
-            font-size: 18px;
-            margin-bottom: 15px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-        }
-        
-        .category-title i {
-            margin-right: 10px;
-            font-size: 16px;
-        }
-        
-        /* Itens de comando */
-        .command-item {
-            padding: 10px 15px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            background-color: rgba(49, 50, 68, 0.3);
-        }
-        
-        .command-item:hover {
-            background-color: var(--border-color);
-            transform: translateX(5px);
-        }
-        
-        .command-item.active {
-            background-color: var(--border-color);
-            border-left: 3px solid var(--accent-color);
-        }
-        
-        .command-item i {
-            margin-right: 10px;
-            color: var(--accent-color);
-            font-size: 14px;
-        }
-        
-        /* Conteúdo principal */
-        .command-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .command-title {
-            font-size: 28px;
-            color: var(--accent-color);
-            display: flex;
-            align-items: center;
-        }
-        
-        .command-title i {
-            margin-right: 10px;
-        }
-        
-        .command-description {
-            margin-bottom: 25px;
-            line-height: 1.6;
-            font-size: 16px;
-        }
-        
-        .command-usage {
-            background-color: var(--card-color);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            font-family: 'Fira Code', monospace;
-            border-left: 4px solid var(--accent-color);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .command-aliases {
-            font-style: italic;
-            color: var(--secondary-text);
-            font-size: 14px;
-        }
-        
-        /* Search box */
-        .search-box {
-            width: 100%;
-            padding: 12px 15px;
-            background-color: var(--card-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-color);
-            margin-bottom: 25px;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-        
-        .search-box:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(137, 180, 250, 0.2);
-        }
-        
-        /* Botão de menu */
-        .menu-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: var(--sidebar-color);
-            border: 1px solid var(--border-color);
-            color: var(--accent-color);
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 90;
-            transition: all 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .menu-button:hover {
-            background-color: var(--border-color);
-            transform: scale(1.05);
-        }
-        
-        .menu-button span {
-            font-size: 24px;
-        }
-        
-        /* Overlay */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 99;
-            display: none;
-            backdrop-filter: blur(3px);
-        }
-        
-        .sidebar.open ~ .overlay {
-            display: block;
-        }
-        
-        /* Página inicial */
-        .home-page {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .bot-card {
-            background-color: var(--card-color);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        
-        .bot-avatar {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 20px;
-            border: 4px solid var(--accent-color);
-        }
-        
-        .bot-name {
-            font-size: 32px;
-            color: var(--accent-color);
-            margin-bottom: 10px;
-        }
-        
-        .bot-description {
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            max-width: 700px;
-        }
-        
-        .stats-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .stat-card {
-            background-color: var(--card-color);
-            border-radius: 10px;
-            padding: 20px;
-            min-width: 150px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .stat-number {
-            font-size: 28px;
-            color: var(--accent-color);
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            font-size: 14px;
-            color: var(--secondary-text);
-        }
-        
-        .features-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .feature-card {
-            background-color: var(--card-color);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .feature-icon {
-            font-size: 24px;
-            color: var(--accent-color);
-            margin-bottom: 15px;
-        }
-        
-        .feature-title {
-            font-size: 18px;
-            color: var(--accent-color);
-            margin-bottom: 10px;
-        }
-        
-        .feature-description {
-            font-size: 14px;
-            line-height: 1.5;
-            color: var(--secondary-text);
-        }
-        
-        /* Botões */
-        .btn {
-            padding: 12px 24px;
-            border-radius: 8px;
-            background-color: var(--accent-color);
-            color: #11111b;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin: 5px;
-        }
-        
-        .btn i {
-            margin-right: 8px;
-        }
-        
-        .btn:hover {
-            background-color: #7ba4f8;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid var(--accent-color);
-            color: var(--accent-color);
-        }
-        
-        .btn-outline:hover {
-            background-color: rgba(137, 180, 250, 0.1);
-        }
-        
-        /* Responsividade */
-        @media (min-width: 1024px) {
-            .sidebar {
-                left: 0;
-                position: fixed;
-            }
-            
-            .main-content {
-                margin-left: 280px;
-                width: calc(100% - 280px);
-            }
-            
-            .menu-button {
-                display: none;
-            }
-            
-            .overlay {
-                display: none !important;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .bot-card {
-                padding: 20px;
-            }
-            
-            .bot-name {
-                font-size: 28px;
-            }
-            
-            .bot-description {
-                font-size: 16px;
-            }
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desculpa Amiga 💖</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      text-align: center;
+      padding: 30px;
+      color: #444;
+      animation: fadeIn 2s ease;
+      overflow-x: hidden;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    h1 {
+      font-size: 3em;
+      color: #ff4da6;
+      text-shadow: 2px 2px #fff;
+      margin-bottom: 10px;
+      animation: glow 2s infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #ff80bf; }
+      to { text-shadow: 0 0 25px #ff1a75; }
+    }
+    p {
+      font-size: 1.3em;
+      margin: 12px 0;
+    }
+    .heart {
+      font-size: 2em;
+      color: red;
+      animation: pulse 1.2s infinite;
+      display: inline-block;
+      margin: 5px;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.7; }
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 25px;
+      max-width: 600px;
+      margin: 20px auto;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0px); }
+    }
+    /* Botão fofo */
+    .cute-btn {
+      background: linear-gradient(135deg, #ff4da6, #ff80bf, #ffb3d9);
+      border: none;
+      color: white;
+      font-size: 1.5em;
+      font-weight: bold;
+      padding: 14px 30px;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 77, 166, 0.6);
+      animation: heartbeat 1.5s infinite;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .cute-btn:hover {
+      transform: scale(1.1) rotate(-2deg);
+      box-shadow: 0 6px 20px rgba(255, 26, 117, 0.8);
+      background: linear-gradient(135deg, #ff1a75, #ff66a3, #ff99c2);
+    }
+    @keyframes heartbeat {
+      0% { transform: scale(1); }
+      25% { transform: scale(1.08); }
+      50% { transform: scale(1); }
+      75% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+    /* Corações caindo */
+    .falling-heart {
+      position: fixed;
+      top: -50px;
+      color: red;
+      font-size: 2em;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
-    <button class="menu-button" id="menuButton">
-        <span>☰</span>
-    </button>
-    
-    <div class="sidebar" id="sidebar">
-        <div class="logo">
-            <div class="logo-icon">
-                <i class="fas fa-robot"></i>
-            </div>
-            <div class="logo-text">Comandos</div>
-        </div>
-        
-        <input type="text" class="search-box" placeholder="🔍 Pesquisar comandos...">
-        
-        <div class="command-item" id="homeBtn">
-            <i class="fas fa-home"></i>
-            <span>INÍCIO</span>
-        </div>
-        
-        <div class="category">
-            <div class="category-title">
-                <i class="fas fa-laugh-beam"></i>
-                <span>Diversão</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-question"></i>
-                <span>8ball</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-cat"></i>
-                <span>Gato</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-dog"></i>
-                <span>Cachorro</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-grin-squint-tears"></i>
-                <span>Piada</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-images"></i>
-                <span>Memes</span>
-            </div>
-        </div>
-        
-        <div class="category">
-            <div class="category-title">
-                <i class="fas fa-tools"></i>
-                <span>Utilidades</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-question-circle"></i>
-                <span>Ajuda</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-network-wired"></i>
-                <span>Ping</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-user-circle"></i>
-                <span>Avatar</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-user"></i>
-                <span>Userinfo</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-server"></i>
-                <span>Serverinfo</span>
-            </div>
-        </div>
-        
-        <div class="category">
-            <div class="category-title">
-                <i class="fas fa-gavel"></i>
-                <span>Moderação</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-ban"></i>
-                <span>Ban</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-running"></i>
-                <span>Kick</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-volume-mute"></i>
-                <span>Mute</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-broom"></i>
-                <span>Limpar</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-exclamation-triangle"></i>
-                <span>Warn</span>
-            </div>
-        </div>
-        
-        <div class="category">
-            <div class="category-title">
-                <i class="fas fa-music"></i>
-                <span>Música</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-play"></i>
-                <span>Play</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-pause"></i>
-                <span>Pause</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-step-forward"></i>
-                <span>Skip</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-list-ol"></i>
-                <span>Fila</span>
-            </div>
-            <div class="command-item">
-                <i class="fas fa-volume-up"></i>
-                <span>Volume</span>
-            </div>
-        </div>
+  <h1>🌸 Me Perdoa Mali 🌸</h1>
+  <div class="card">
+    <p>Eu errei, sei que te magoei... 💔</p>
+    <p>eu nao vivo sem vc Mali✨</p>
+    <p>te amo mali 💕</p>
+    <p>quero fica com vc todo dis/horas/segundos</p>
+    <p>e eu ja falei que te amo?</p>
+    <div>
+      <span class="heart">❤️</span>
+      <span class="heart">💖</span>
+      <span class="heart">💕</span>
+      <span class="heart">🌸</span>
     </div>
-    
-    <div class="overlay" id="overlay"></div>
-    
-    <div class="main-content" id="mainContent">
-        <!-- Conteúdo da página inicial (visível por padrão) -->
-        <div class="home-page" id="homePage">
-            <div class="bot-card">
-                <img src="https://i.imgur.com/J7l5w7t.png" alt="Bot Avatar" class="bot-avatar">
-                <h1 class="bot-name">Zyvex</h1>
-                <p class="bot-description">
-                    Zyvex é um bot multifuncional desenvolvido para trazer diversão, utilidades e moderação 
-                    para seus servidores Discord. Com uma interface amigável e diversos comandos, Lorita 
-                    ajuda a melhorar a experiência da sua comunidade.
-                </p>
-                
-                <div class="stats-container">
-                    <div class="stat-card">
-                        <div class="stat-number">250+</div>
-                        <div class="stat-label">Servidores</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">100+</div>
-                        <div class="stat-label">Comandos</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">24/7</div>
-                        <div class="stat-label">Online</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">1M+</div>
-                        <div class="stat-label">Usuários</div>
-                    </div>
-                </div>
-                
-                <div>
-                    <button class="btn">
-                        <i class="fas fa-plus"></i> Adicionar ao Discord
-                    </button>
-                    <button class="btn btn-outline">
-                        <i class="fas fa-question"></i> Suporte
-                    </button>
-                </div>
-            </div>
-            
-            <h2 style="color: var(--accent-color); margin: 30px 0 20px; text-align: center;">Principais Recursos</h2>
-            
-            <div class="features-container">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-gamepad"></i>
-                    </div>
-                    <h3 class="feature-title">Diversão</h3>
-                    <p class="feature-description">
-                        Comandos divertidos como memes, gifs, jogos e muito mais para entreter sua comunidade.
-                    </p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-tools"></i>
-                    </div>
-                    <h3 class="feature-title">Utilidades</h3>
-                    <p class="feature-description">
-                        Ferramentas úteis para moderadores e membros, como informações de usuário e servidor.
-                    </p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-gavel"></i>
-                    </div>
-                    <h3 class="feature-title">Moderação</h3>
-                    <p class="feature-description">
-                        Sistema completo de moderação para manter seu servidor seguro e organizado.
-                    </p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-music"></i>
-                    </div>
-                    <h3 class="feature-title">Música</h3>
-                    <p class="feature-description">
-                        Reprodutor de música de alta qualidade com suporte a playlists e várias plataformas.
-                    </p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Conteúdo dos comandos (oculto por padrão) -->
-        <div class="command-page" id="commandPage" style="display: none;">
-            <div class="command-header">
-                <div class="command-title">
-                    <i class="fas fa-question"></i>
-                    <span>8ball</span>
-                </div>
-            </div>
-            
-            <div class="command-description">
-                Faça uma pergunta para a bola mágica e receba uma resposta aleatória. 
-                Perfecto para quando você precisa de orientação em momentos difíceis!
-            </div>
-            
-            <div class="command-usage">
-                !8ball [pergunta]<br>
-                Exemplo: !8ball Vou ser rico algum dia?
-            </div>
-            
-            <div class="command-aliases">
-                Aliases: ball8, bola8, magicball
-            </div>
-        </div>
-    </div>
+    <button class="cute-btn" onclick="alert('Te amo Mali e sempre vou te amar 🌷💖')">💖 Me desculpa?</button>
+  </div>
 
-    <script>
-        // Menu toggle
-        const menuButton = document.getElementById('menuButton');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-        
-        menuButton.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-        });
-        
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-        });
-        
-        // Navegação entre páginas
-        const homeBtn = document.getElementById('homeBtn');
-        const homePage = document.getElementById('homePage');
-        const commandPage = document.getElementById('commandPage');
-        
-        homeBtn.addEventListener('click', () => {
-            homePage.style.display = 'block';
-            commandPage.style.display = 'none';
-            sidebar.classList.remove('open');
-            
-            // Remove active de todos os itens
-            document.querySelectorAll('.command-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Adiciona active apenas no botão home
-            homeBtn.classList.add('active');
-        });
-        
-        // Comandos interativos
-        document.querySelectorAll('.command-item:not(#homeBtn)').forEach(item => {
-            item.addEventListener('click', function() {
-                // Remove a classe active de todos os itens
-                document.querySelectorAll('.command-item').forEach(i => {
-                    i.classList.remove('active');
-                });
-                
-                // Adiciona a classe active apenas no item clicado
-                this.classList.add('active');
-                
-                // Atualiza o conteúdo principal
-                const commandName = this.querySelector('span').textContent;
-                document.querySelector('.command-title span').textContent = commandName;
-                
-                // Atualiza o ícone do comando (pega o mesmo ícone do item clicado)
-                const commandIcon = this.querySelector('i').className;
-                document.querySelector('.command-title i').className = commandIcon;
-                
-                // Mostra a página de comandos e esconde a home
-                homePage.style.display = 'none';
-                commandPage.style.display = 'block';
-                
-                // Fecha o menu no mobile
-                if (window.innerWidth < 1024) {
-                    sidebar.classList.remove('open');
-                }
-            });
-        });
-        
-        // Fechar menu quando a tela for redimensionada para desktop
-        window.addEventListener('resize', () => {
-            if (window.innerWidth >= 1024) {
-                sidebar.classList.remove('open');
-            }
-        });
-        
-        // Inicializa mostrando a página home e com o botão home ativo
-        homeBtn.classList.add('active');
-    </script>
+  <!-- Corações caindo -->
+  <script>
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "falling-heart";
+      heart.innerHTML = ["❤️","💖","💕","🌸"][Math.floor(Math.random()*4)];
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
+    }
+    setInterval(createHeart, 500);
+  </script>
 </body>
 </html>
